@@ -27,6 +27,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
+        file: ./Dockerfile.dockerfile  # Specify the Dockerfile path and name
         push: true
         tags: apoorvkuma/finaldev:v1.0
 
