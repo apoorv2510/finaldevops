@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Tasting App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styling */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7fc;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background-color: #3498db;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0 15px;
+            transition: color 0.3s ease;
+        }
+
+        .navbar a:hover {
+            color: #dfe6e9;
+        }
+
+        /* Header Styling */
+        h1 {
+            text-align: center;
+            margin-top: 100px;
+            color: #2c3e50;
+            font-size: 2.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        /* Container Styling */
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        a {
+            text-decoration: none;
+            color: #3498db;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .create-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 14px 28px;
+            background-color: #28a745;
+            color: #fff;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        .create-btn:hover {
+            background-color: #218838;
+        }
+
+        /* Recipe List Styling */
+        ul {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        li {
+            background-color: #ecf0f1;
+            margin: 15px 0;
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        li:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        li h2 {
+            font-size: 1.7rem;
+            color: #2c3e50;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Button Styling */
+        button, .view-btn, .update-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        .view-btn {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .view-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .update-btn {
+            background-color: #f39c12;
+            color: white;
+        }
+
+        .update-btn:hover {
+            background-color: #e67e22;
+        }
+
+        button {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        button:hover {
+            background-color: #c0392b;
+        }
+
+        form {
+            display: inline;
+        }
+
+        /* Footer Styling */
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            margin-top: 40px;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+        footer p {
+            margin-bottom: 5px;
+        }
+
+        footer a {
+            color: #fff;
+            margin: 0 10px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            li h2 {
+                font-size: 1.4rem;
+            }
+
+            .view-btn, .update-btn, button {
+                padding: 10px 18px;
+                font-size: 13px;
+            }
+
+            .navbar a {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <a href="/">Home</a>
+        <a href="/create">Create Recipe</a>
+    </div>
+
+    <!-- Page Header -->
+    <h1>All Recipes</h1>
+
+    <!-- Main Container -->
+    <div class="container">
+        <a href="/create" class="create-btn">Create New Recipe</a>
+        <ul>
+            {% for recipe in recipes %}
+            <li>
+                <h2>{{ recipe.title }}</h2>
+                <div class="actions">
+                    <a href="/recipe/{{ recipe.id }}" class="view-btn">View</a>
+                    <a href="/update/{{ recipe.id }}" class="update-btn">Update</a>
+                    <form action="/delete/{{ recipe.id }}" method="post">
+                        <button type="submit">Delete</button>
+                    </form>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Recipe Tasting App. All Rights Reserved.</p>
+        <a href="/">Home</a> | <a href="/create">Create Recipe</a>
+    </footer>
+</body>
+
+</html>
+
+
+
+
+
+

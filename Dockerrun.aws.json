@@ -1,0 +1,28 @@
+{
+    "AWSEBDockerrunVersion": 2,
+    "containerDefinitions": [
+      {
+        "name": "web",
+        "image": "apoorvkuma/devopsproject:v1.0",
+        "essential": true,
+        "memory": 512,
+        "portMappings": [
+          {
+            "containerPort": 8080,
+            "hostPort": 8080
+          }
+        ],
+        "environment": [
+          {
+            "name": "FLASK_APP",
+            "value": "app.py"
+          },
+          {
+            "name": "FLASK_ENV",
+            "value": "production"
+          }
+        ]
+      }
+    ]
+  }
+  

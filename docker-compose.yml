@@ -1,0 +1,9 @@
+version: '3'
+services:
+  web:
+    image: "${DOCKER_IMAGE:-apoorvkuma/devopsproject:v1.0}"  # Uses your Docker image by default
+    ports:
+      - "8080:8080"
+
+
+
