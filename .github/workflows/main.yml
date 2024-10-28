@@ -37,7 +37,8 @@ jobs:
         EC2_USER: ${{ secrets.EC2_USER }}
         EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
       run: |
-        echo "${EC2_SSH_KEY}" > key.pem
+        # Write the SSH key to a file using printf to handle line breaks correctly
+        printf "%b" "${EC2_SSH_KEY}" > key.pem
         chmod 600 key.pem
 
         # SSH into the EC2 instance and deploy
