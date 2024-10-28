@@ -37,12 +37,17 @@ jobs:
         EC2_USER: ${{ secrets.EC2_USER }}
         EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
       run: |
-        # Write the SSH key to a file using printf to handle line breaks correctly
         printf "%b" "${EC2_SSH_KEY}" > key.pem
         chmod 600 key.pem
 
-        # SSH into the EC2 instance and deploy
+        # Test SSH connection
+        ssh -o StrictHostKeyChecking=no -i key.pem $EC2_USER@$EC2_HOST "echo 'SSH connection successful'"
+
+        # SSH into the EC2 instance and deploy if SSH succeeded
         ssh -o StrictHostKeyChecking=no -i key.pem $EC2_USER@$EC2_HOST << EOF
+          # Ensure Docker is available
+          command -v docker || { echo "Docker not found, exiting with 127"; exit 127; }
+
           # Pull latest Docker image from Docker Hub
           docker pull apoorvkuma/finaldev:v1.0
 
