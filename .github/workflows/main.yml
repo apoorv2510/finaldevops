@@ -43,20 +43,25 @@ jobs:
         # Test SSH connection
         ssh -o StrictHostKeyChecking=no -i key.pem $EC2_USER@$EC2_HOST "echo 'SSH connection successful'"
 
-        # SSH into the EC2 instance and deploy if SSH succeeded
+        # SSH into the EC2 instance and deploy with Docker Compose
         ssh -o StrictHostKeyChecking=no -i key.pem $EC2_USER@$EC2_HOST << EOF
-          # Ensure Docker is available
+          # Ensure Docker and Docker Compose are available
           command -v docker || { echo "Docker not found, exiting with 127"; exit 127; }
+          command -v docker-compose || sudo apt-get install -y docker-compose
 
-          # Pull latest Docker image from Docker Hub
+          # Pull the latest Docker image from Docker Hub
           docker pull apoorvkuma/finaldev:v1.0
 
-          # Stop and remove old container
-          docker stop my-web-app || true
-          docker rm my-web-app || true
+          # Navigate to the directory containing docker-compose.yml or create it if needed
+          mkdir -p ~/deploy
+          cd ~/deploy
 
-          # Run the new container on port 8080
-          docker run -d --name my-web-app -p 8080:8080 apoorvkuma/finaldev:v1.0
+          # Copy the docker-compose.yml file to the EC2 instance
+          echo "${{ secrets.DOCKER_COMPOSE_FILE }}" > docker-compose.yml
+
+          # Use Docker Compose to bring up the latest version
+          docker-compose down  # Stops and removes existing containers
+          docker-compose up -d --build  # Builds and starts containers in detached mode
         EOF
 
     - name: Clean up
