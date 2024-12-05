@@ -3,9 +3,4 @@ gunicorn==22.0.0
 Flask-Bcrypt==1.0.1
 Flask-Login==0.6.3
 werkzeug==2.1.1
-requests==2.28.1
 
-# .NET dependencies
-# Format: dotnet:PackageName=Version
-dotnet:Newtonsoft.Json=13.0.3
-dotnet:DotNetEnv=2.4.0
