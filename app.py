@@ -5,9 +5,6 @@ from database import get_db_connection, init_db
 
 
 app = Flask(__name__)
-
-app.config['SECRET_KEY'] = os.getenv('FLASK_SECRET_KEY')
-
 app.secret_key = 'your_secret_key'
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
