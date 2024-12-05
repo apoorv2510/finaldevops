@@ -5,6 +5,15 @@ from database import get_db_connection, init_db
 
 
 app = Flask(__name__)
+
+# Load the secret key from an environment variable
+app.config.update(
+    SECRET_KEY=os.getenv('FLASK_SECRET_KEY'),
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SECURE=True,
+    SESSION_COOKIE_SAMESITE='Lax'
+)
+
 app.secret_key = 'your_secret_key'
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
