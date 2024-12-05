@@ -6,10 +6,7 @@ from database import get_db_connection, init_db
 
 app = Flask(__name__)
 
-# Load the secret key from an environment variable
-app.config.update(
-    SECRET_KEY=os.getenv('FLASK_SECRET_KEY'),
-)
+app.config['SECRET_KEY'] = os.getenv('FLASK_SECRET_KEY')
 
 app.secret_key = 'your_secret_key'
 bcrypt = Bcrypt(app)
