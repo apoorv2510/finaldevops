@@ -26,18 +26,13 @@ jobs:
           # Update PATH environment variable
           echo "$HOME/tools/sonarqube/sonar-scanner-4.8.0.2856-linux/bin" >> $GITHUB_PATH
 
-      - name: Ensure sh is available
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y bash
-          if [ ! -f /usr/bin/sh ]; then sudo ln -s /usr/bin/bash /usr/bin/sh; fi
-
       - name: SonarCloud Scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
           JAVA_HOME: ${{ secrets.JAVA_HOME }}
           PATH: ${{ secrets.JAVA_HOME }}/bin:$PATH
+        shell: bash
         run: |
           # Run SonarQube analysis using SonarCloud
           sonar-scanner \
