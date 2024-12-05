@@ -32,7 +32,7 @@ jobs:
         run: |
           # Run SonarQube analysis using SonarCloud
           sonar-scanner \
-            -Dsonar.projectKey=<your_project_key> \
+            -Dsonar.projectKey=apoorv2510_finaldevops \
             -Dsonar.organization=<your_organization> \
             -Dsonar.sources=. \
             -Dsonar.host.url=$SONAR_HOST_URL \
