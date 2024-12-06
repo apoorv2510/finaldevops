@@ -2,13 +2,16 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from database import get_db_connection, init_db
-
+from flask_caching import Cache
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
+
+# Cache configuration
+cache = Cache(app, config={'CACHE_TYPE': 'SimpleCache', 'CACHE_DEFAULT_TIMEOUT': 300})
 
 # Initialize the database
 init_db()
@@ -89,18 +92,17 @@ def logout():
     flash('Logged out successfully', 'success')
     return redirect(url_for('login'))
 
-# Route: Home page - List all recipes
 @app.route('/')
 @login_required  # Protect this route with authentication
+@cache.cached(timeout=300)  # Cache for 300 seconds
 def index():
     conn = get_db_connection()
     recipes = conn.execute('SELECT * FROM recipes').fetchall()
     conn.close()
     return render_template('index.html', recipes=recipes)
 
-# Route: Create a new recipe
 @app.route('/create', methods=('GET', 'POST'))
-@login_required  # Protect this route with authentication
+@login_required
 def create():
     if request.method == 'POST':
         title = request.form['title']
@@ -112,13 +114,16 @@ def create():
                      (title, ingredients, instructions))
         conn.commit()
         conn.close()
+
+        cache.clear()  # Clear all cached data
         return redirect(url_for('index'))
 
     return render_template('create.html')
 
-# Route: View a single recipe
+
 @app.route('/recipe/<int:id>')
 @login_required  # Protect this route with authentication
+@cache.cached(timeout=300, query_string=True)  # Cache results based on query string and timeout
 def view(id):
     conn = get_db_connection()
     recipe = conn.execute('SELECT * FROM recipes WHERE id = ?', (id,)).fetchone()
@@ -129,9 +134,8 @@ def view(id):
     
     return render_template('view.html', recipe=recipe)
 
-# Route: Update a recipe
 @app.route('/update/<int:id>', methods=('GET', 'POST'))
-@login_required  # Protect this route with authentication
+@login_required
 def update(id):
     conn = get_db_connection()
     recipe = conn.execute('SELECT * FROM recipes WHERE id = ?', (id,)).fetchone()
@@ -145,6 +149,7 @@ def update(id):
                      (title, ingredients, instructions, id))
         conn.commit()
         conn.close()
+        cache.clear()  # Clear all cached data
         return redirect(url_for('index'))
 
     conn.close()
