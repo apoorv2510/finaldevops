@@ -161,11 +161,6 @@ Future Enhancements
 
 ---
 
-License
-This project is open-source and available under the [MIT License](LICENSE).
-
----
-
 Contributors
 - Apoorv S  
 - Contributions are welcome! Feel free to submit pull requests or raise issues.
